@@ -1,0 +1,5 @@
+var mongoose = require ('mongoose');
+const con = ()=>{
+    return mongoose.connect("mongodb+srv://anurajendran242:PachuAdhi@cluster0.ztjgw3n.mongodb.net/MyCart?retryWrites=true&w=majority")
+}
+    module.exports = con;
