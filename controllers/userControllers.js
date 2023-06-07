@@ -238,14 +238,14 @@ const singleProduct = async(req,res)=>
         res.render('User/singlePage',{product,user})
     } catch (error) {
         
-        console.timeLog(error)
+        console.log(error)
     }
 }
 
 const checkOut = (req,res)=>{
-    let pid = req.params.id;
+    // let pid = req.params.id;
     let price = parseInt(req.params.price);
-    console.log(pid,price);
+    console.log(price);
     var options = {
         amount:price,
         currency: "INR",
@@ -258,12 +258,36 @@ const checkOut = (req,res)=>{
             console.log(order)
             res.render('User/checkOut',{order})
             }
-            })
-        }
-        const MyCart = (req,res)=>{
-            res.render('User/MyCart')
+            });
         }
 
+
+        const MyCart = async(req,res)=>
+        {
+        {
+         let {user} = req.session;
+        try {
+        let cart = await CartModel.findOne({userId:user._id});
+        console.log(cart);
+        let product = cart.products;
+        console.log("products",product);
+        // let items = cart.products.item;
+        // console.log("items",items);
+        let totalItems = product.length;
+        var total =0;
+        product.forEach((obj)=>{
+                total = total +  obj.item.price * obj.quantity;
+        })
+        let data = {
+            totalItems,
+            total
+        }
+        res.render('User/MyCart',{product,data});
+    } catch (error) {
+        console.log(error)
+    } 
+}
+        }
 
      const payVarify = async(req,res)=>{
         console.log(req.body)
@@ -283,7 +307,7 @@ const checkOut = (req,res)=>{
             console.log("Failed")
         }
 
-     }
+     } 
 
 
 
