@@ -17,24 +17,24 @@
                   <p>  Please register with your deatails</p><br>
 
                   <div class="form-outline mb-4">
-                    <input type="text" name="user" id="form2Example11" class="form-control">
+                    <input type="text" required  name="user" id="form2Example11" class="form-control" >
                     <label class="form-label" for="form2Example11">Username</label>
                   </div>
 
                   <div class="form-outline mb-4">
-                    <input type="email" name="email" id="form2Example11" class="form-control"/>
+                    <input type="email" required  name="email" id="form2Example11" class="form-control"/>
                     <label class="form-label" for="form2Example11">Email</label>
                   </div>
 
                   <div class="form-outline mb-4">
-                    <input type="password" name="password" id="form2Example22" class="form-control" />
+                    <input type="password" required  name="password" id="form2Example22" class="form-control" />
                     <label class="form-label" for="form2Example22">Password</label>
                   </div>
 
                    <div class="form-outline mb-4">
-                    <input type="password" name="cpassword" id="form2Example22" class="form-control" />
-                    <label class="form-label" for="form2Example22">Confirm Password</label>
-                  </div>
+                      <input type="password" required name="cpassword" id="confirmPassword" class="form-control" />
+                      <label class="form-label" for="confirmPassword">Confirm Password</label>
+                    </div>
 
                   <div class="text-center pt-1 mb-5 pb-1">
                     <input class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit" value="Register"style="border: none;">
@@ -48,7 +48,34 @@
                   </div>
 
                 </form>
-
+                <body>
+                  <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Get references to the password and confirm password fields
+                        var passwordField = document.getElementById('form2Example22');
+                        var confirmPasswordField = document.getElementById('confirmPassword');
+                        
+                        // Get reference to the form
+                        var form = document.querySelector('form');
+                        
+                        // Add event listener for form submission
+                        form.addEventListener('submit', function(event) {
+                          // Check if the password and confirm password fields have the same value
+                          if (passwordField.value !== confirmPasswordField.value) {
+                            event.preventDefault(); // Prevent the form from being submitted
+                            
+                            // Display an error message
+                            var errorElement = document.createElement('p');
+                            errorElement.textContent = 'Passwords do not match';
+                            errorElement.style.color = 'red';
+                            
+                            // Insert the error message after the confirm password field
+                            confirmPasswordField.parentNode.insertBefore(errorElement, confirmPasswordField.nextSibling);
+                          }
+                        });
+                      });
+                  </script>
+                </body>
               </div>
             </div>
           </div>

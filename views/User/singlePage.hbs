@@ -1,8 +1,39 @@
- {{>Nav}}
+ <style>
+    ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+
+
+  }
+  
+  li {
+	float: right;
+    
+  }
+  
+  li a {
+	display: block;
+	color: teal;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+     font-size:  30px ;
+    font-weight:bold ;
+    padding-right: 20px;
+        font-family: 'Source Sans Pro', sans-serif;
+  }
+
+</style>
+
+<ul>
+  <li style="float: left;"><a href="#contact" style="	color: black; font-size:50px;font-family: 'Source Sans Pro', sans-serif;margin-left: 70px;">Buy<span style="color: teal;">C</span>art</a></li>
+</ul>
  <style>
     .main
     {
-        width: 900px;
+        width: 800px;
         height: 500px;
         box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
         margin: auto;
@@ -92,8 +123,8 @@
         <br>
         <br>
         <div class="btnm">
-    <div class="btn1"><a href="/checkOut/{{product.price}}/{{product.id}}" style="text-decoration: none;color:black">Check out</a></div>
-     <div class="btn2"><a href="" style="text-decoration: none;color:black">Cancel</a></div>
+    <div class="btn1"><a href="/checkOut/{{product.price}}" style="text-decoration: none;color:black">Check out</a></div>
+     <div class="btn2"><a href="/" style="text-decoration: none;color:black">Cancel</a></div>
      </div>
     </div>
  </div> 

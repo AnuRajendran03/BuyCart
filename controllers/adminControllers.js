@@ -29,7 +29,7 @@ const adminHome = (req,res)=>
 }
 
 const addProductpage = (req,res)=>
-{
+{ 
     res.render('admin/addProduct');
 }
 

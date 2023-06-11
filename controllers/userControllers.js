@@ -69,19 +69,21 @@ const getmyOrder = (req,res)=>{
 
 const getRegister = (req,res)=>{
     res.render('User/Register');
+    
 }
 
-const doLogin = async(req,res)=>
-{
-    let users = await userModel.find({email:req.body.email,password:req.body.password})
-    if(users.length>0){
-         console.log("successfully login"); 
-         req.session.user = users[0]
-         res.redirect('/')
-    }else{
-        console.log("invalid user");
-        res.redirect('/login')
+const doLogin = async (req, res) => {
+    let users = await userModel.find({ email: req.body.email, password: req.body.password });
+    if (users.length > 0) {
+      console.log("successfully login");
+      req.session.user = users[0];
+      res.redirect('/');
+    } else {
+      console.log("invalid user");
+      res.redirect('/login');
     }
+  };
+  
 //       
     
 //       {
@@ -107,7 +109,7 @@ const doLogin = async(req,res)=>
 //       }
 //     }
 // })
-}  
+ 
 
 const Logout = (req,res)=>
 {
@@ -138,59 +140,55 @@ const doRegister = async(req,res)=>{
 // }
 }
 
-const addtocart = async (req,res)=>
-{
-     let {user} = req.session;
-     let {id} = req.params;
+const addtocart = async (req, res) => {
+    let { user } = req.session;
+    let { id } = req.params;
     try {
-        let product = await productModel.findOne({_id: id});
+        let product = await productModel.findOne({ _id: id });
         product.id = id;
-        console.log(product,"product details");
-        let obj ={
-            item:product,
-            quantity:1
-        }
-        let cart = await CartModel.findOne({userId:user._id})
-        if(cart){
-            console.log(cart,"cart item details");
-            cart.products.forEach(async obj => {
-                if(obj.item._id ==id){
-                    console.log("Item found")
-                    var newqty = obj.quantity;
-                     newqty++;
-                     console.log(newqty);
-                    res.redirect('/')
-                }else{
-                    console.log("not found!")
-                    
-                    await CartModel.findOneAndUpdate({ userId: user._id },
-                                        {
-                                            $push: {
-                                                products: obj
-                                            }
-                                        })
-                                        res.redirect('/')
+        console.log(product, "product details");
+        let obj = {
+            item: product,
+            quantity: 1
+        };
+        let cart = await CartModel.findOne({ userId: user._id });
+        if (cart) {
+            let itemFound = false;
+            for (let i = 0; i < cart.products.length; i++) {
+                if (cart.products[i].item._id == id) {
+                    console.log("Item found");
+                    await CartModel.findOneAndUpdate({
+                        "products.item._id": product._id
+                    },
+                        {
+                            $inc: { 'products.$.quantity': 1 }
+                        }
+                    )
+                    itemFound = true;
+                    break;
                 }
-               
-         });
-         }else{
+            }
+            if (!itemFound) {
+                console.log("Item not found!");
+                cart.products.push(obj);
+            }
+            await cart.save();
+            res.redirect('/');
+        } else {
             let cartObj = {
-                userId:user._id,
-                products:[obj]
-            } 
-            console.log("cart",cartObj)
+                userId: user._id,
+                products: [obj]
+            };
+            console.log("cart", cartObj);
             await CartModel.create(cartObj);
-            res.redirect('/')
-         }
-         //let proExist = cart.products.findIndex(product=> products.item._id == id)
-      
-           
+            res.redirect('/');
         }
-        catch(error){
-            console.log(error)
-        }
-        
+    } catch (error) {
+        console.log(error);
     }
+};
+
+
     //         
     //         if (proExist != -1){
     //             await CartModel.findOneAndUpdate({
@@ -244,7 +242,7 @@ const singleProduct = async(req,res)=>
 
 const checkOut = (req,res)=>{
     // let pid = req.params.id;
-    let price = parseInt(req.params.price);
+    let price = parseInt(req.params.price*100);
     console.log(price);
     var options = {
         amount:price,
@@ -262,32 +260,34 @@ const checkOut = (req,res)=>{
         }
 
 
-        const MyCart = async(req,res)=>
+ const MyCart = async(req,res)=>
         {
-        {
-         let {user} = req.session;
-        try {
-        let cart = await CartModel.findOne({userId:user._id});
+    let { user } = req.session;
+    try {
+        let cart = await CartModel.findOne({ userId: user._id });
         console.log(cart);
-        let product = cart.products;
-        console.log("products",product);
-        // let items = cart.products.item;
-        // console.log("items",items);
-        let totalItems = product.length;
-        var total =0;
-        product.forEach((obj)=>{
-                total = total +  obj.item.price * obj.quantity;
-        })
+        let products = cart.products;
+        console.log("products", products);
+        let totalItems = products.length;
+        let totalPrice = 0;
+
+        products.forEach((obj) => {
+            totalPrice += obj.item.price * obj.quantity;
+        });
+
+        console.log(totalPrice, 'total price');
+
         let data = {
             totalItems,
-            total
-        }
-        res.render('User/MyCart',{product,data});
+            totalPrice
+        };
+
+        res.render('User/MyCart', { products, data });
     } catch (error) {
-        console.log(error)
-    } 
-}
-        }
+        console.log(error);
+    }
+};
+        
 
      const payVarify = async(req,res)=>{
         console.log(req.body)

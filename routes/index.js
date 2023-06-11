@@ -9,7 +9,7 @@ var {
   doLogin,
   getmyOrder,
   addtocart,
-  singleProduct,
+  singleProduct, 
   checkOut,
   payVarify,
   MyCart,
